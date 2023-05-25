@@ -1,0 +1,162 @@
+@import url('lightmode.css');
+@import url('darkmode.css') screen;
+body {
+	color: var(--main-color);
+	font-family: 'Ubuntu Condensed';	
+}
+
+.context h1, .context h2, .context h3, .context h4, .context h5 {
+	color:var(--main-color-alt);
+}
+h2.groupheader {
+	color: var(--main-color-alt);
+	border-bottom:	2px var(--content-border-color) solid;
+}
+.directory tr.even {
+	background-color: unset;
+}
+div.header
+{
+	background-image: unset;
+	background-repeat:unset;
+	background-color: unset;
+	border-bottom:	2px var(--content-border-color) solid;
+}
+div.directory {
+	margin: unset;
+	border-top: 2px var(--content-border-color) solid;
+	border-bottom: unset;
+}
+.mdescLeft, .mdescRight,
+.memItemLeft, .memItemRight,
+.memTemplItemLeft, .memTemplItemRight, .memTemplParams {
+	background-color: unset;
+	border: none;
+	margin: 4px;
+	padding: 1px 0 0 8px;
+}
+
+.memSeparator {
+	border-bottom: unset;
+}
+
+.memtitle {
+	padding: unset;
+	border-top: unset;
+	border-left: unset;
+	border-right: unset;
+	border-top-right-radius: unset;
+	border-top-left-radius: unset;
+	margin-bottom: unset;
+	background-image: unset;
+	background-repeat: unset;
+	background-color: unset;
+	line-height: unset;
+	font-weight: 300;
+	float:left;
+}
+span.mlabel {
+	background-color: unset;
+	text-shadow: unset;
+	color: #4f9d08;
+	border-radius: unset;
+	border-top:unset;
+	border-left:unset;
+	border-right:unset;
+	border-bottom:unset;
+	text-shadow: none;
+}
+.memitem {
+	background-color: #3a4055;
+	filter: brightness(85%);
+	color: var(--main-color-alt)
+}
+.memproto, dl.reflist dt {
+	border-top: unset;
+	border-left: unset;
+	border-right: unset;
+	text-shadow: unset;
+	background-color: unset;
+	box-shadow: unset;
+	border-top-right-radius: unset;
+	-moz-box-shadow: unset;
+	-moz-border-radius-topright: unset;
+	-webkit-box-shadow: unset;
+	-webkit-border-top-right-radius: unset;
+
+}
+.memdoc, dl.reflist dd {
+	border-bottom: unset;
+	border-left: unset;
+	border-right: unset;
+	background-color: unset;
+	background-image: unset;
+	background-repeat:unset;
+	background-color: unset;
+	border-bottom-left-radius: unset;
+	border-bottom-right-radius: unset;
+	box-shadow: unset;
+	-moz-border-radius-bottomleft: unset;
+	-moz-border-radius-bottomright: unset;
+	-moz-box-shadow: unset;
+	-webkit-border-bottom-left-radius: unset;
+	-webkit-border-bottom-right-radius: unset;
+	-webkit-box-shadow: unset;
+}
+.paramname {
+	color: #4f9d08;
+}
+hr {
+	height: 0px;
+	border: none;
+	border-top:	2px var(--content-border-color) solid;
+}
+.icon {
+	background-color: unset;
+	color: #4f9d08;
+	text-align: center;
+	border-radius: 4px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+.classindex dl.odd {
+	background-color: unset;
+}
+.sm-dox {
+	background-image:unset;
+}
+#main-nav
+{
+	visibility: hidden;
+}
+#nav-path
+{
+	visibility: hidden;
+}
+#titlearea
+{
+	border-bottom: unset;
+}
+.topbar_breadcrump
+{
+	width:100%;
+	margin-top: 20px;
+	padding: 10px;
+}
+ul.breadcrump {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+ul.breadcrump > li {
+	display: inline;
+	font-family: 'Ubuntu Condensed';font-size: 2vw;	
+}
+#top
+{
+	background-color: var(--header-bg-color);
+}
+#projectname
+{
+font-size: 4vw;
+}
