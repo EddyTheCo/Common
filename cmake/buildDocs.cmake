@@ -14,7 +14,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 		doxygen_docs
 		${PROJECT_SOURCE_DIR}
 		${DOC_SOURCE_DIRS} 
-		ALL
 		COMMENT "Generate man pages"
 		)
 else()
