@@ -1,5 +1,5 @@
 name: build-docs
-run-name: ${{ github.actor }} ${{ github.event_name }} to ${{ github.base_ref }} 
+
 on:
   workflow_call:
     
@@ -44,6 +44,5 @@ jobs:
           path: ${{ github.workspace }}/doc/html/ 
 
       - name: Deploy to GitHub Pages
-        if: ${{ (github.event.pull_request.merged == true) && (startsWith(github.base_ref, 'main')) }}
         id: deployment
         uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
