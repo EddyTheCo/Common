@@ -3,11 +3,6 @@ run-name: ${{ github.actor }} ${{ github.event_name }} to ${{ github.base_ref }}
 on:
   workflow_call:
     
-
-  pull_request_target:
-    types: [closed]
-    branches: [main] 
-
 jobs:
   configure-deploy:
     runs-on: ubuntu-latest
