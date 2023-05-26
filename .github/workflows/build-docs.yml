@@ -1,0 +1,54 @@
+name: build-docs
+run-name: ${{ github.actor }} ${{ github.event_name }} to ${{ github.base_ref }} 
+on:
+  workflow_call:
+    
+
+  pull_request_target:
+    types: [closed]
+    branches: [main] 
+
+jobs:
+  configure-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      
+      id-token: write  
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+          
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+
+      - name: Install dependencies on ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake doxygen
+          
+
+      - name: Create build directory
+        run:  cmake -E make_directory ${{runner.temp}}/build
+
+      - name: Configure
+        working-directory: ${{ runner.temp }}/build
+        run: cmake -G Ninja -DBUILD_DOCS=ON ${{ github.workspace }}
+      
+      - name: Build docs
+        working-directory: ${{ runner.temp }}/build
+        run: cmake --build . --target doxygen_docs 
+
+      - uses: actions/upload-pages-artifact@v1.0.8
+        with:
+          path: ${{ github.workspace }}/doc/html/ 
+
+      - name: Deploy to GitHub Pages
+        if: ${{ (github.event.pull_request.merged == true) && (startsWith(github.base_ref, 'main')) }}
+        id: deployment
+        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
