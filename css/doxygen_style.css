@@ -2,7 +2,7 @@
 @import url('darkmode.css') screen;
 body {
 	color: var(--main-color);
-	font-family: 'Ubuntu Condensed';	
+	font-family: 'Ubuntu Condensed';
 }
 
 .context h1, .context h2, .context h3, .context h4, .context h5 {
@@ -150,7 +150,7 @@ ul.breadcrump {
 }
 ul.breadcrump > li {
 	display: inline;
-	font-family: 'Ubuntu Condensed';font-size: 2vw;	
+	font-family: 'Ubuntu Condensed';font-size: 2vw;
 }
 #top
 {
@@ -158,5 +158,5 @@ ul.breadcrump > li {
 }
 #projectname
 {
-font-size: 4vw;
+	font-size: 4vw;
 }
