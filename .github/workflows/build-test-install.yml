@@ -1,0 +1,101 @@
+name: push-build-release
+on: 
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      sharedLib:
+        required: true
+        type: bool
+      useThread:
+        required: true
+        type: bool
+
+jobs:
+  build_test_package:
+    runs-on: ${{ inputs.os }}
+    continue-on-error: true  
+
+    steps:
+          
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Install dependencies on windows
+        if: startsWith(inputs.os, 'windows')
+        run: |
+          choco install ninja cmake
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install dependencies on ubuntu
+        if: startsWith(inputs.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install ninja-build cmake doxygen
+          
+      - name: Install dependencies on macos
+        if: startsWith(inputs.os, 'macos')
+        run: |
+          brew install cmake ninja
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.0'
+
+      - name: Create build directory
+        run:  cmake -E make_directory ${{runner.temp}}/build
+
+      - name: Configure
+        working-directory: ${{ runner.temp }}/build
+        run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release"  -DBUILD_TESTING=ON -DUSE_THREADS=${{ inputs.useThread }} -DCMAKE_INSTALL_PREFIX="../install" -DBUILD_SHARED_LIBS=${{ inputs.sharedLib }} ${{ github.workspace }}
+      
+      - name: Build
+        working-directory: ${{ runner.temp }}/build
+        run: cmake --build .   
+
+      - name: Test
+        working-directory: ${{ runner.temp }}/build
+        run: ninja test
+
+      - name: Install
+        working-directory: ${{ runner.temp }}/build
+        run: cmake --install .
+
+      - name: Binary Package
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          cpack -B package --config CPackConfig.cmake
+          cmake -E remove_directory package/_CPack_Packages
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.os }}_sharedlib_${{ inputs.sharedLib }}
+          path: ${{ runner.temp }}/build/package/* 
+      
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build_test_package
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+          
+      - uses: actions/checkout@v3
+    
+      - uses: actions/download-artifact@v3
+        with:
+           path: artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
+          
+      - name: Releases 
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./artifacts/*/*
+
