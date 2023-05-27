@@ -7,10 +7,10 @@ on:
         type: string  
       sharedLib:
         default: false
-        type: bool  
+        type: boolean 
       useThread:
         default: false
-        type: bool  
+        type: boolean  
 
 jobs:
   build_test_package:
