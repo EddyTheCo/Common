@@ -3,11 +3,14 @@ on:
   workflow_call:
     inputs:
       os:
-        default: ubuntu-latest
+        default: 'ubuntu-latest'
+        type: string  
       sharedLib:
         default: false
+        type: bool  
       useThread:
         default: false
+        type: bool  
 
 jobs:
   build_test_package:
