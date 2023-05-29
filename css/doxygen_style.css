@@ -12,7 +12,7 @@ a {
 }
 
 .contents a:visited {
-	color: var(--header-color);
+	color: var(--link-color);
 }
 .context h1, .context h2, .context h3, .context h4, .context h5 {
 	color:var(--main-color-alt);
@@ -76,7 +76,7 @@ span.mlabel {
 	text-shadow: none;
 }
 .memitem {
-	background-color: var(--highlight-anim-color);
+	background-color: unset;
 	filter: brightness(85%);
 	color: var(--main-color-alt)
 }
