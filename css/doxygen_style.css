@@ -1,5 +1,8 @@
 @import url('lightmode.css');
 @import url('darkmode.css') screen;
+body, table, div, p, dl {
+	font: unset;
+}
 body {
 	color: var(--main-color);
 	font-family: 'Ubuntu Condensed';
@@ -104,7 +107,7 @@ span.mlabel {
 	-webkit-box-shadow: unset;
 }
 .paramname {
-	color: #4f9d08;
+	color: unset;
 }
 hr {
 	height: 0px;
@@ -124,10 +127,6 @@ hr {
 }
 .sm-dox {
 	background-image:unset;
-}
-#main-nav
-{
-	visibility: hidden;
 }
 #nav-path
 {
@@ -156,7 +155,45 @@ ul.breadcrump > li {
 {
 	background-color: var(--header-bg-color);
 }
-#projectname
-{
-	font-size: 4vw;
+.sm-dox a,
+.sm-dox a:focus,
+.sm-dox a:hover,
+.sm-dox a:active {
+	font-family:unset;
+	font-weight:unset;
+	text-shadow: unset;
+	color: var(--header-color);
+}
+
+#main-nav{
+	background-color: var(--content-bg-color-alt);
+}
+.sm-dox ul a,
+.sm-dox ul a:focus,
+.sm-dox ul a:hover,
+.sm-dox ul a:active {
+	background-color: var(--content-bg-color-alt);
+	color: var(--header-color);
+}
+.sm-dox ul {
+	border: unset;
+	background:unset;
+	border-radius:unset ;
+	box-shadow:unset;
+}
+.sm-dox ul a:hover {
+	background-image: unset;
+	background-repeat:unset;
+	color:var(--main-color);
+	text-shadow:unset
+}
+.sm-dox a,
+.sm-dox a:focus,
+.sm-dox a:active,
+.sm-dox a:hover,
+.sm-dox a.highlighted {
+	background-image:unset;
+	background-repeat:unset;
+	background-position:unset;
+	border-radius:unset;
 }
