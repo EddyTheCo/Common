@@ -3,6 +3,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/cppreference-doxygen-web.tag.xml")
 	file(DOWNLOAD "https://doc.qt.io/qt-6/qtcore.tags"
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtcore.tags")
+	file(DOWNLOAD "https://doc.qt.io/qt-6/qtnetwork.tags"
+		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtnetwork.tags")
 
 	find_package(Doxygen REQUIRED)
 	get_target_property(doxygen_style css_doxygen_style SOURCES)
@@ -20,6 +22,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 	set(DOXYGEN_TAGFILES
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtcore.tags=http://doc.qt.io/qt-6/"
+		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtnetwork.tags=http://doc.qt.io/qt-6/"
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/cppreference-doxygen-web.tag.xml=http://en.cppreference.com/w/"
 		)
 
