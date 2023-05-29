@@ -7,6 +7,10 @@ body {
 	color: var(--main-color);
 	font-family: 'Ubuntu Condensed';
 }
+a {
+	color: var(--link-color);
+}
+
 .contents a:visited {
 	color: var(--header-color);
 }
