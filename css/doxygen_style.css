@@ -7,7 +7,9 @@ body {
 	color: var(--main-color);
 	font-family: 'Ubuntu Condensed';
 }
-
+.contents a:visited {
+	color: var(--header-color);
+}
 .context h1, .context h2, .context h3, .context h4, .context h5 {
 	color:var(--main-color-alt);
 }
@@ -70,7 +72,7 @@ span.mlabel {
 	text-shadow: none;
 }
 .memitem {
-	background-color: #3a4055;
+	background-color: var(--highlight-anim-color);
 	filter: brightness(85%);
 	color: var(--main-color-alt)
 }
@@ -197,3 +199,8 @@ ul.breadcrump > li {
 	background-position:unset;
 	border-radius:unset;
 }
+div.fragment {
+	background-color: unset;
+	border: unset;
+}
+
