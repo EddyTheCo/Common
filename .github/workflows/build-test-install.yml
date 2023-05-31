@@ -10,7 +10,10 @@ on:
         type: boolean 
       useThread:
         default: false
-        type: boolean  
+        type: boolean 
+      qtModules:
+        default: ''
+        type: string  
 
 jobs:
   build_test_package:
@@ -44,6 +47,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: '6.5.0'
+          modules: ${{ inputs.qtModules }}  
 
       - name: Create build directory
         run:  cmake -E make_directory ${{runner.temp}}/build
