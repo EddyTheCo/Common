@@ -62,7 +62,7 @@ jobs:
 
       - name: Test
         working-directory: ${{ runner.temp }}/build
-        run: make test
+        run: ninja test
 
       - name: Install
         working-directory: ${{ runner.temp }}/build
