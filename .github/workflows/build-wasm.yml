@@ -49,11 +49,13 @@ jobs:
           modules: ${{ inputs.qtModules }} 
 
       - name: Create build directory
-        run:  cmake -E make_directory ${{runner.temp}}/build
+        run: |
+          cmake -E make_directory ${{runner.temp}}/build
+          echo "qt root dir:" $QT_ROOT_DIR
 
       - name: Configure
         working-directory: ${{ runner.temp }}/build
-        run: $GITHUB_WORKSPACE/Qt/6.5.0/wasm_singlethread/bin/qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
+        run: $QT_ROOT_DIR/../wasm_singlethread/bin/qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
       
       - name: Build
         working-directory: ${{ runner.temp }}/build
