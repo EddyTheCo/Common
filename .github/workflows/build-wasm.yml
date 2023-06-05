@@ -34,14 +34,14 @@ jobs:
           actions-cache-folder: 'emsdk-cache'
 
 
-      - name: Install Qt
+      - name: Install Qt wasm
         uses: jurplel/install-qt-action@v3
         with:
           aqtversion: '==3.1.*'
           version: '6.5.0'
           host: 'linux'
           target: 'desktop'
-          arch: 'gcc_64'
+          arch: 'wasm_singlethread'
           modules: ${{ inputs.qtModules }} 
 
       - name: Create build directory
