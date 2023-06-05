@@ -59,6 +59,8 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           chmod +x ${{ github.workspace }}/../Qt/6.5.0/wasm_singlethread/bin/qt-cmake
+          ls ${{ github.workspace }}/../Qt/6.5.0/wasm_singlethread/lib
+          ls ${{ github.workspace }}/../Qt/6.5.0/wasm_singlethread/lib/cmake
           ${{ github.workspace }}/../Qt/6.5.0/wasm_singlethread/bin/qt-cmake -G Ninja -DQT_HOST_PATH=${{ github.workspace }}/../Qt/6.5.0/gcc_64/ -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
       
       - name: Build
