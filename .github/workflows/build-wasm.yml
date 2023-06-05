@@ -41,6 +41,7 @@ jobs:
           host: 'linux'
           target: 'desktop'
           arch: 'gcc_64'
+          modules: ${{ inputs.qtModules }} 
 
       - name: Install Qt wasm
         uses: jurplel/install-qt-action@v3
