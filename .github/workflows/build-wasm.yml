@@ -33,8 +33,10 @@ jobs:
           version: 3.1.25
           actions-cache-folder: 'emsdk-cache'
 
-      - name: Verify
-        run: emcc -v
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.0'
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
