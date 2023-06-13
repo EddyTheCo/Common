@@ -10,7 +10,8 @@ on:
         type: string 
       secrets:
       NODE_JWT:
-        required: false 
+        required: false
+        type: string
 
 jobs:
   build_wasm:
