@@ -8,7 +8,7 @@ on:
       qtModules:
         default: ''
         type: string 
-      secrets:
+    secrets:
       NODE_JWT:
         required: false
         type: string
