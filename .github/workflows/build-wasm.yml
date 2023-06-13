@@ -7,7 +7,10 @@ on:
         type: string  
       qtModules:
         default: ''
-        type: string  
+        type: string 
+      secrets:
+      NODE_JWT:
+        required: false 
 
 jobs:
   build_wasm:
