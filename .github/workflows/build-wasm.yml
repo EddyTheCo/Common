@@ -26,6 +26,11 @@ jobs:
           fetch-depth: 0
       
           
+      - name: Replace Secrets
+        run: |
+          if test -f "qml/window.qml"; then sed -i 's/NODE_JWT/${{ secrets.NODE_JWT }}/g' qml/window.qml; fi
+
+
       - name: Install dependencies on ubuntu
         run: |
           sudo apt-get update
