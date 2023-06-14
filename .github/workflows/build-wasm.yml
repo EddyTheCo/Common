@@ -24,6 +24,7 @@ jobs:
 
     environment:
       name: github-pages
+      if: inputs.deploy_page
       url: ${{ steps.deployment.outputs.page_url }}
         
     steps:
