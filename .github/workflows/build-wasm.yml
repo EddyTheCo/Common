@@ -7,7 +7,10 @@ on:
         type: string  
       qtModules:
         default: ''
-        type: string 
+        type: string
+      deploy_page:
+        default: true
+        type: boolean 
     secrets:
       NODE_JWT:
         required: false
@@ -30,6 +33,7 @@ jobs:
       
           
       - name: Replace Secrets
+        if: inputs.deploy_page
         run: |
           if test -f "qml/window.qml"; then sed -i 's/NODE_JWT/${{ secrets.NODE_JWT }}/g' qml/window.qml; fi
 
@@ -78,10 +82,12 @@ jobs:
         run: cmake --build .   
       
       - uses: actions/upload-pages-artifact@v1.0.8
+        if: inputs.deploy_page
         with:
           path: ${{ github.workspace }}/wasm/ 
 
       - name: Deploy to GitHub Pages
+        if: inputs.deploy_page
         id: deployment
-        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v2 
 
