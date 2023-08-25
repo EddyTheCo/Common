@@ -17,6 +17,9 @@ on:
       test:
         default: true
         type: boolean  
+      qtVersion:
+        default: '6.5.0'
+        type: string  
     secrets:
       NODE_JWT:
         required: false
@@ -52,8 +55,8 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          aqtversion: '==3.1.2'
-          version: '6.6.0'
+          aqtversion: '==3.1.*'
+          version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
 
       - name: Create build directory
