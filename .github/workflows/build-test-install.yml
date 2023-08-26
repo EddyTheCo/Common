@@ -79,10 +79,25 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: cmake --install .
 
-      - name: Binary Package
+      - name: Binary Package Macos
+        if: startsWith(inputs.os, 'macos')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package --config CPackConfig.cmake
+          cpack -B package -G DragNDrop --config CPackConfig.cmake
+          cmake -E remove_directory package/_CPack_Packages
+
+      - name: Binary Package Windows
+        if: startsWith(inputs.os, 'windows')
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          cpack -B package -G NSIS --config CPackConfig.cmake
+          cmake -E remove_directory package/_CPack_Packages
+      
+      - name: Binary Package Ubuntu
+        if: startsWith(inputs.os, 'ubuntu')
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          cpack -B package -G DEB STGZ --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
 
       - uses: actions/upload-artifact@v3
