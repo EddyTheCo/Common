@@ -60,10 +60,10 @@ jobs:
           modules: ${{ inputs.qtModules }}  
 
       - name: show
-        if: startsWith(inputs.os, 'windows')
-        working-directory: "$QT_ROOT_DIR/bin"
-        run: ls
-          
+        run: |
+          cd $QT_ROOT_DIR/bin         
+          ls
+
       - name: Create build directory
         run:  cmake -E make_directory ${{runner.temp}}/build
 
