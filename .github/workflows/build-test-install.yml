@@ -61,7 +61,7 @@ jobs:
 
       - name: show
         if: startsWith(inputs.os, 'windows')
-        working-directory: ${QT_ROOT_DIR}/bin/
+        working-directory: ${{ QT_ROOT_DIR }}/bin/
         run: ls
           
       - name: Create build directory
