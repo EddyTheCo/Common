@@ -59,6 +59,11 @@ jobs:
           version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
 
+      - name: show
+        if: startsWith(inputs.os, 'windows')
+        working-directory: ${QT_ROOT_DIR}/bin/
+        run: ls
+          
       - name: Create build directory
         run:  cmake -E make_directory ${{runner.temp}}/build
 
@@ -66,9 +71,6 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DNODE_JWT=${{ secrets.NODE_JWT }} -DBUILD_TESTING=${{ inputs.test }} -DUSE_THREADS=${{ inputs.useThread }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install -DBUILD_SHARED_LIBS=${{ inputs.sharedLib }} ${{ github.workspace }}
 
-      - name: show
-        working-directory: ${{ runner.temp }}/build/_deps/qclientmqtt-src
-        run: git branch
       
       - name: Build
         working-directory: ${{ runner.temp }}/build
