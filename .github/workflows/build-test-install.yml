@@ -87,21 +87,21 @@ jobs:
         if: startsWith(inputs.os, 'macos')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "DragNDrop STGZ" --config CPackConfig.cmake
+          cpack -B package -G "DragNDrop; STGZ" --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
 
       - name: Binary Package Windows
         if: startsWith(inputs.os, 'windows')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "NSIS STGZ" --config CPackConfig.cmake
+          cpack -B package -G "NSIS; STGZ" --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
       
       - name: Binary Package Ubuntu
         if: startsWith(inputs.os, 'ubuntu')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "DEB STGZ" --config CPackConfig.cmake
+          cpack -B package -G "DEB; STGZ" --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
 
       - uses: actions/upload-artifact@v3
