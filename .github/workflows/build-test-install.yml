@@ -61,7 +61,9 @@ jobs:
 
       - name: show
         run: |
-          cd $QT_ROOT_DIR/bin         
+          cd "$QT_ROOT_DIR/bin"
+          echo "$QT_ROOT_DIR"
+          pwd
           ls
 
       - name: Create build directory
