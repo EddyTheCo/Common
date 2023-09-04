@@ -1,6 +1,8 @@
 function(prepare_wasm_folder)
 	set(single_value_options TAG )
-	cmake_parse_arguments(PARSE_ARGV 0 arg "${single_value_options}")
+	cmake_parse_arguments(PARSE_ARGV 0 arg
+		"${no_value_options}" "${single_value_options}" "${multi_value_options}"
+		)
 	if(NOT arg_TAG)
 		set(arg_TAG main)
 	endif()
