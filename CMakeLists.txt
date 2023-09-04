@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 include(cmake/VersionFromGit.cmake)
+include(cmake/prepareWasm.cmake)
 
 add_custom_target(css_doxygen_style SOURCES 
 	${CMAKE_CURRENT_SOURCE_DIR}/css/darkmode.css
