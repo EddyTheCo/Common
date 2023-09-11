@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       qtVersion:
-        default: '6.5.0'
+        default: '6.7.0'
         type: string
       qtArch:
         default: 'android_arm64_v8a'
