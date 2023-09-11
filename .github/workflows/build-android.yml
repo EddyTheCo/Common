@@ -77,19 +77,17 @@ jobs:
       - name: Configure
         working-directory: ${{ runner.temp }}/build
         run: |
-          ls ${{ steps.setup-ndk.outputs.ndk-path }}/build
-          ls ${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake
           ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja -DQT_ANDROID_TARGET_SDK_VERSION=34 -DQT_ANDROID_MIN_SDK_VERSION=33 -DQTDEPLOY=OFF -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DNODE_JWT=${{ secrets.NODE_JWT }}  -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
 
       - name: Build
         working-directory: ${{ runner.temp }}/build
         run: |
-          cat ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json
           cmake --build .
 
       - name: Build apk
         run: |
+          cat ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json
           ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release
 
       - uses: actions/upload-pages-artifact@v1.0.8
