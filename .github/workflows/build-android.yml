@@ -84,7 +84,9 @@ jobs:
 
       - name: Build
         working-directory: ${{ runner.temp }}/build
-        run: cmake --build .
+        run: |
+          cat ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json
+          cmake --build .
 
       - name: Build apk
         run: |
