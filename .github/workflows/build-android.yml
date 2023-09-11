@@ -37,7 +37,7 @@ jobs:
         id: setup-jdk
         with:
           distribution: 'oracle' 
-          java-version: '20'
+          java-version: '19'
 
       - name: Configure SDK
         uses: android-actions/setup-android@v2
