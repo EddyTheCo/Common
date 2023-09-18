@@ -58,7 +58,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          aqtversion: '==3.1.6'
+          aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
 
