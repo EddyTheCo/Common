@@ -16,12 +16,15 @@ on:
         type: string
     secrets:
       QT_ANDROID_KEYSTORE_PATH:
-        required: false
+        required: true
       QT_ANDROID_KEYSTORE_STORE_PASS:
-        required: false
+        required: true
+      QT_ANDROID_KEYSTORE_ALIAS:
+        required: true
 env:
   QT_ANDROID_KEYSTORE_PATH: ${{ secrets.QT_ANDROID_KEYSTORE_PATH }}      
   QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}      
+  QT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}      
 
 jobs:
   build_android:
