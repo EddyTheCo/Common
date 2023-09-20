@@ -87,8 +87,9 @@ jobs:
 
       - name: Build apk
         run: |
-          cat ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign
+
+
 
       - uses: actions/upload-pages-artifact@v1.0.8
         with:
