@@ -15,8 +15,13 @@ on:
         default: ''
         type: string
     secrets:
-      NODE_JWT:
+      QT_ANDROID_KEYSTORE_PATH:
         required: false
+      QT_ANDROID_KEYSTORE_STORE_PASS:
+        required: false
+    env:
+      QT_ANDROID_KEYSTORE_PATH: ${{ secrets.QT_ANDROID_KEYSTORE_PATH }}      
+      QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}      
 
 jobs:
   build_android:
