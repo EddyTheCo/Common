@@ -15,16 +15,8 @@ on:
         default: ''
         type: string
     secrets:
-      QT_ANDROID_KEYSTORE_PATH:
-        required: true
       QT_ANDROID_KEYSTORE_STORE_PASS:
         required: true
-      QT_ANDROID_KEYSTORE_ALIAS:
-        required: true
-env:
-  QT_ANDROID_KEYSTORE_PATH: ${{ secrets.QT_ANDROID_KEYSTORE_PATH }}      
-  QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}      
-  QT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}      
 
 jobs:
   build_android:
@@ -96,7 +88,7 @@ jobs:
 
       - name: Build apk
         run: |
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/android_release.keystore estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}
 
 
 
