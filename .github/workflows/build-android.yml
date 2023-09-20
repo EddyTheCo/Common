@@ -17,6 +17,8 @@ on:
     secrets:
       QT_ANDROID_KEYSTORE_STORE_PASS:
         required: true
+      NODE_JWT:
+        required: false
 
 jobs:
   build_android:
@@ -88,7 +90,7 @@ jobs:
 
       - name: Build apk
         run: |
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json --output ${{ runner.temp }}/build/android-build/ --android-platform android-34 --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/android_release.keystore estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/android-build/ --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json  --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/android_release.keystore estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_ALIAS }}
 
 
 
