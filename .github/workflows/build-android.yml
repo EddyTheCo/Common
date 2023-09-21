@@ -92,8 +92,8 @@ jobs:
           ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/android-build/ --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json  --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/android_release.keystore  estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
 
 
-
       - uses: actions/upload-pages-artifact@v1.0.8
         with:
+          name: android_${{ inputs.qtArch }}
           path: ${{ runner.temp }}/build/android-build/build/outputs/apk/release/
 
