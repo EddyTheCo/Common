@@ -10,7 +10,10 @@ on:
         type: string
       deploy_page:
         default: true
-        type: boolean 
+        type: boolean
+      emsdkVersion:
+        default: '3.1.25'
+        type: string  
     secrets:
       NODE_JWT:
         required: false
@@ -33,7 +36,7 @@ jobs:
 
       - uses: mymindstorm/setup-emsdk@v11
         with:
-          version: 3.1.25
+          version: ${{ inputs.emsdkVersion }}
           actions-cache-folder: 'emsdk-cache'
 
       - name: Install Qt 
