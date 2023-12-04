@@ -36,6 +36,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 		doxygen_docs
 		${PROJECT_SOURCE_DIR}/README.md
 		${PROJECT_SOURCE_DIR}/include
+		${PROJECT_SOURCE_DIR}/qml
 		${DOC_SOURCE_DIRS}
 		COMMENT "Generate man pages"
 		)
