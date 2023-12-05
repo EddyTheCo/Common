@@ -25,6 +25,7 @@ if(DOXYGEN_FOUND)
 	set(DOXYGEN_FILTER_PATTERNS  "*.qml=doxyqml")
 	set(DOXYGEN_FILE_PATTERNS  "*.qml *.hpp *.h *.cpp *.c")
 	set(DOXYGEN_EXTENSION_MAPPING  "qml=C++")
+	set(DOXYGEN_RECURSIVE  ON)
 
 	set(DOXYGEN_TAGFILES
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtcore.tags=http://doc.qt.io/qt-6/"
