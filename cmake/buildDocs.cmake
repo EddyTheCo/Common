@@ -14,7 +14,7 @@ if(DOXYGEN_FOUND)
 	get_target_property(doxygen_head css_doxygen_Header SOURCES)
 	get_target_property(doxygen_foot css_doxygen_Footer SOURCES)
 	set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doc")
-	set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md")
+	set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md")
 	set(DOXYGEN_HTML_EXTRA_STYLESHEET ${doxygen_style})
 	set(DOXYGEN_HTML_HEADER ${doxygen_head})
 	set(DOXYGEN_HTML_FOOTER ${doxygen_foot})
@@ -25,6 +25,7 @@ if(DOXYGEN_FOUND)
 	set(DOXYGEN_FILTER_PATTERNS  "*.qml=doxyqml")
 	set(DOXYGEN_FILE_PATTERNS  "*.qml,*.hpp,*.cpp,*.h,*.c,*.hh")
 	set(DOXYGEN_EXTENSION_MAPPING  "qml=C++")
+	set(DOXYGEN_EXCLUDE_PATTERNS  "*/doc/*,*/build*/*,*/examples/*")
 
 	set(DOXYGEN_TAGFILES
 		"${CMAKE_CURRENT_BINARY_DIR}/doxtags/qtcore.tags=http://doc.qt.io/qt-6/"
