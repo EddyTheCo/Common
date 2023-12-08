@@ -23,7 +23,7 @@ if(DOXYGEN_FOUND)
 	set(DOXYGEN_EXTRACT_STATIC YES)
 	set(DOXYGEN_GENERATE_TAGFILE ${CMAKE_SOURCE_DIR}/doc/html/${CMAKE_PROJECT_NAME}.tag)
 	set(DOXYGEN_FILTER_PATTERNS  "*.qml=doxyqml")
-	set(DOXYGEN_FILE_PATTERNS  "*.qml,*.hpp,*.cpp,*.h,*.c,*.hh")
+	set(DOXYGEN_FILE_PATTERNS  "*.qml,*.hpp,*.cpp,*.h,*.c,*.hh,*.md")
 	set(DOXYGEN_EXTENSION_MAPPING  "qml=C++")
 	set(DOXYGEN_EXCLUDE_PATTERNS  "*/doc/*,*/build*/*,*/examples/*")
 
