@@ -36,7 +36,7 @@ if(DOXYGEN_FOUND)
 
 	doxygen_add_docs(
 		doxygen_docs
-		${CMAKE_CURRENT_SOURCE_DIR}
+		${PROJECT_SOURCE_DIR}
 		COMMENT "Generate man pages"
 		)
 endif(DOXYGEN_FOUND)
