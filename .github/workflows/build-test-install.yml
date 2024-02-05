@@ -45,7 +45,6 @@ jobs:
         if: startsWith(inputs.os, 'macos')
         run: |
           brew install cmake ninja
-          ls  /usr/local/Cellar/openssl@3/3.2.0_1/lib/libcrypto.dylib
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
