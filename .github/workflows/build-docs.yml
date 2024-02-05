@@ -16,7 +16,7 @@ jobs:
     
     steps:
           
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -38,10 +38,10 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: cmake --build . --target doxygen_docs 
 
-      - uses: actions/upload-pages-artifact@v1.0.8
+      - uses: actions/upload-pages-artifact@v2
         with:
           path: ${{ github.workspace }}/doc/html/ 
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v4
