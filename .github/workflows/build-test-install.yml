@@ -97,7 +97,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: releaseArtifacts 
+          name: ${{ inputs.os }}_${{ inputs.cmakeArgs }} 
           path: ${{ runner.temp }}/build/package/* 
       
 
