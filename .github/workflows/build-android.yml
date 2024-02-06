@@ -101,6 +101,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: releaseArtifacts
+          name: ${{ inputs.qtArch }}_${{ inputs.qtTarget }}_${{ inputs.cmakeArgs }}
           path: ${{ runner.temp }}/android-packages/*
 
