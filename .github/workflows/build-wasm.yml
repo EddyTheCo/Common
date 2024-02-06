@@ -5,6 +5,9 @@ on:
       qtVersion:
         default: '6.5.0'
         type: string  
+      cmakeArgs:
+        default: ''
+        type: string
       qtModules:
         default: ''
         type: string
@@ -14,21 +17,18 @@ on:
       emsdkVersion:
         default: '3.1.25'
         type: string  
-    secrets:
-      NODE_JWT:
-        required: false
 
 jobs:
   build_wasm:
     runs-on: 'ubuntu-latest'
         
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: startsWith(inputs.deploy_dev,'false')
         with:
           fetch-depth: 0
       
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: startsWith(inputs.deploy_dev,'true')
         with:
           fetch-depth: 0
@@ -39,7 +39,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install ninja-build cmake
 
-      - uses: mymindstorm/setup-emsdk@v11
+      - uses: mymindstorm/setup-emsdk@v14
         with:
           version: ${{ inputs.emsdkVersion }}
           actions-cache-folder: 'emsdk-cache'
@@ -71,14 +71,14 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake 
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake -G Ninja -DQTDEPLOY=OFF -DNODE_JWT=${{ secrets.NODE_JWT }}  -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake -G Ninja -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
       
       - name: Build
         working-directory: ${{ runner.temp }}/build
         run: cmake --build .   
       
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: startsWith(inputs.deploy_dev,'true')
         with:
           fetch-depth: 0
@@ -91,7 +91,7 @@ jobs:
         run: |
           rm CMakeCache.txt
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake 
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake -G Ninja -DQTDEPLOY=OFF -DNODE_JWT=${{ secrets.NODE_JWT }}  -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release"  -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}/developBranch
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/wasm_singlethread/bin/qt-cmake -G Ninja -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release"  ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}/developBranch
       
       - name: Build
         if: startsWith(inputs.deploy_dev,'true')
@@ -100,7 +100,7 @@ jobs:
           cmake --build .   
           mv ${{ github.workspace }}/developBranch/wasm ${{ github.workspace }}/wasm/develop
       
-      - uses: actions/upload-pages-artifact@v1.0.8
+      - uses: actions/upload-pages-artifact@v2
         with:
           path: ${{ github.workspace }}/wasm/ 
 

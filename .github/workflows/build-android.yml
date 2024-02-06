@@ -8,27 +8,25 @@ on:
       qtArch:
         default: 'android_arm64_v8a'
         type: string
-      useThread:
-        default: false
-        type: boolean 
       qtModules:
         default: ''
         type: string
       qtTarget:
         default: ''
         type: string
+      cmakeArgs:
+        default: ''
+        type: string
     secrets:
       QT_ANDROID_KEYSTORE_STORE_PASS:
         required: true
-      NODE_JWT:
-        required: false
 
 jobs:
   build_android:
     runs-on: 'ubuntu-latest'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -38,15 +36,15 @@ jobs:
           sudo apt-get install ninja-build cmake
 
       - name: Configure JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         id: setup-jdk
         with:
-          distribution: 'oracle' 
+          distribution: 'oracle'
           java-version: '20'
 
       - name: Configure SDK
-        uses: android-actions/setup-android@v2
-        id: setup-sdk  
+        uses: android-actions/setup-android@v3
+        id: setup-sdk
 
       - name: Configure NDK
         uses: nttld/setup-ndk@v1
@@ -56,7 +54,7 @@ jobs:
           add-to-path: false
           link-to-sdk: true
 
-      - name: Install Qt 
+      - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
           aqtversion: '==3.1.*'
@@ -64,7 +62,7 @@ jobs:
           host: 'linux'
           target: 'desktop'
           arch: 'gcc_64'
-          modules: ${{ inputs.qtModules }} 
+          modules: ${{ inputs.qtModules }}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -83,7 +81,7 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DQTDEPLOY=OFF -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DNODE_JWT=${{ secrets.NODE_JWT }}  -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" -DUSE_THREADS=${{ inputs.useThread }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
 
       - name: Build
         working-directory: ${{ runner.temp }}/build
@@ -98,11 +96,11 @@ jobs:
         working-directory: ${{ runner.temp }}/build/android-build/build/outputs/apk/release/
         run: |
           cmake -E make_directory ${{runner.temp}}/android-packages
-          cmake -E tar c ${{runner.temp}}/android-packages/android_${{ inputs.qtArch }}_MThread_${{ inputs.useThread }}.tar -- .
+          cmake -E tar c ${{runner.temp}}/android-packages/android_${{ inputs.qtArch }}.tar -- .
 
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: android_${{ inputs.qtArch }}_${{ inputs.useThread }}
+          name: ${{ inputs.qtArch }}_${{ inputs.qtTarget }}_${{ inputs.cmakeArgs }}
           path: ${{ runner.temp }}/android-packages/*
 

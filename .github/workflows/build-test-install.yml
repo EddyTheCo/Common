@@ -25,7 +25,7 @@ jobs:
 
     steps:
           
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -95,9 +95,9 @@ jobs:
           cpack -B package -G "DEB;TGZ" --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: releaseArtifacts 
+          name: ${{ inputs.os }}_${{ inputs.cmakeArgs }} 
           path: ${{ runner.temp }}/build/package/* 
       
 
