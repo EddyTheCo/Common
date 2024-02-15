@@ -5,6 +5,9 @@ on:
       qtVersion:
         default: '6.6.0'
         type: string
+      subdir: 
+        default: ''
+        type: string
       qtArch:
         default: 'android_arm64_v8a'
         type: string
@@ -89,11 +92,12 @@ jobs:
           cmake --build .
 
       - name: Build apk
+        working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}
         run: |
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/android-build/ --input ${{ runner.temp }}/build/android-${{ inputs.qtTarget }}-deployment-settings.json  --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/android/android_release.keystore  estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/${{ inputs.subdir }}/android-build/ --input ${{ runner.temp }}/build/${{ inputs.subdir }}/android-${{ inputs.qtTarget }}-deployment-settings.json --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/${{ inputs.subdir }}/android/android_release.keystore  estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
 
       - name: Package
-        working-directory: ${{ runner.temp }}/build/android-build/build/outputs/apk/release/
+        working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}/android-build/build/outputs/apk/release/
         run: |
           cmake -E make_directory ${{runner.temp}}/android-packages
           cmake -E tar c ${{runner.temp}}/android-packages/android_${{ inputs.qtArch }}.tar -- .
