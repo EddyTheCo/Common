@@ -35,9 +35,14 @@ jobs:
           git checkout $tag
           cmake -DBUILD_DOCS=ON -DBUILD_TESTING=OFF -DDOXYGEN_OUTPUT_DIRECTORY=${{runner.temp}}/$tag/ -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ github.workspace }}/itags)'" -B ${{runner.temp}}/$tag -S ${{ github.workspace }}
           cmake --build ${{runner.temp}}/$tag --target doxygen_docs
+          echo "ls runner tag:"
           ls ${{runner.temp}}/$tag/
+          echo "pwd:"
           pwd
+          echo "ls:"
           ls
+          echo "ls doc:"
+          ls doc
           cp -r ${{runner.temp}}/$tag/html ${{runner.temp}}/docs/$tag
           done
 
