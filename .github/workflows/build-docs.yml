@@ -2,20 +2,20 @@ name: build-docs
 
 on:
   workflow_call:
-    
-jobs:
-  configure-deploy:
-    runs-on: ubuntu-latest
+
+    jobs:
+      configure-deploy:
+        runs-on: ubuntu-latest
     permissions:
-      pages: write      
-      id-token: write  
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
-          
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -25,28 +25,31 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake doxygen python3-pip
           pip3 install doxyqml
-      
+
       - name:  Build versioned docs
         run: |
           git tag> tags
           awk '$1=$1' ORS=' ' tags > itags
           mkdir ${{runner.temp}}/docs
           for tag in $(cat tags); do echo $tag
-          git checkout $tag 
-          cmake -DBUILD_DOCS=ON -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ github.workspace }}/itags)'" -B ${{runner.temp}}/$tag -S ${{ github.workspace }} 
-          cmake --build ${{runner.temp}}/$tag --target doxygen_docs 
-          cp -r ${{runner.temp}}/$tag/html ${{runner.temp}}/docs/$tag 
+          git checkout $tag
+          cmake -DBUILD_DOCS=ON -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ github.workspace }}/itags)'" -B ${{runner.temp}}/$tag -S ${{ github.workspace }}
+          cmake --build ${{runner.temp}}/$tag --target doxygen_docs
+          cp -r ${{runner.temp}}/$tag/html ${{runner.temp}}/docs/$tag
           done
-          
-      
+
+
       - name: Package
         working-directory: ${{runner.temp}}/docs/
         run: |
           cmake -E make_directory ${{runner.temp}}/page-packages
           cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- .
-      
+
       - uses: actions/upload-artifact@v4
         with:
-          name: 'github-pages' 
+          name: 'github-pages'
           path:  ${{runner.temp}}/page-packages/*
 
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
