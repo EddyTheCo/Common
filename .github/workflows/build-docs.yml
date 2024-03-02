@@ -33,7 +33,7 @@ jobs:
           mkdir ${{runner.temp}}/docs
           for tag in $(cat tags); do echo $tag
           git checkout $tag
-          cmake -DBUILD_DOCS=ON -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ github.workspace }}/itags)'" -B ${{runner.temp}}/$tag -S ${{ github.workspace }}
+          cmake -DBUILD_DOCS=ON -DDOXYGEN_OUTPUT_DIRECTORY=${{runner.temp}}/$tag/ -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ github.workspace }}/itags)'" -B ${{runner.temp}}/$tag -S ${{ github.workspace }}
           cmake --build ${{runner.temp}}/$tag --target doxygen_docs
           cp -r ${{runner.temp}}/$tag/html ${{runner.temp}}/docs/$tag
           done
