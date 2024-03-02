@@ -3,9 +3,9 @@ name: build-docs
 on:
   workflow_call:
 
-    jobs:
-      configure-deploy:
-        runs-on: ubuntu-latest
+jobs:
+  configure-deploy:
+    runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
