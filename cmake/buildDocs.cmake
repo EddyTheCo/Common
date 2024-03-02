@@ -2,6 +2,7 @@
 function(build_docs)
 	find_package(Doxygen)
 	if(DOXYGEN_FOUND)
+		message(STATUS "DOXYGEN_OUTPUT_DIRECTORY:${DOXYGEN_OUTPUT_DIRECTORY}")
 		if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 			file(DOWNLOAD "https://upload.cppreference.com/mwiki/images/f/f8/cppreference-doxygen-web.tag.xml"
 				"${CMAKE_CURRENT_BINARY_DIR}/doxtags/cppreference-doxygen-web.tag.xml")
