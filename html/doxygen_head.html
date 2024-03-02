@@ -6,19 +6,6 @@
 	<link href='https://fonts.googleapis.com/css?family=Allerta Stencil' rel='stylesheet'>
 	<link href='https://fonts.googleapis.com/css?family=Ubuntu Condensed' rel='stylesheet'>
 	<link href="tabs.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript">
-		document.documentElement.setAttribute('data-theme', 'dark');
-		$(function () {
-					if (document.documentElement.getAttribute('data-theme') === 'dark')
-						$('input#th-toggle').prop('checked', true);
-					$('input#th-toggle').change(function() {
-								var theme = this.checked ? 'dark' : 'light';
-								localStorage.setItem('theme', theme);
-								document.documentElement.setAttribute('data-theme', theme);
-							});
-				});
-	</script>
-
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="dynsections.js"></script>
 	<link href="search/search.css" rel="stylesheet" type="text/css">
@@ -26,23 +13,43 @@
 	<script type="text/javascript" src="search/search.js"></script>
 	<link href="doxygen.css" rel="stylesheet" type="text/css">
 	<link href="darkmode.css" rel="stylesheet" type="text/css">
+	<link href="lightmode.css" rel="stylesheet" type="text/css">
 	<link href="doxygen_style.css" rel="stylesheet" type="text/css">
 
+
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded",function(){
+					var h='<select class="select" ';
+
+					var pn=$("#projectnumber")[0].innerText;
+					const versions = pn.split(' ');
+					var current_ver=versions[0];
+					for(i=0;i<versions.length;i++)
+					{
+								selected='';
+								if(current_ver===versions[i])selected=' selected="selected"';
+
+								h+='<option value="'+versions[i]+'"'+selected+'>'+versions[i]+'</option>';
+							}
+					h+='</select>';
+					$("#projectnumber")[0].innerHTML=h;
+					$("#projectnumber select")[0].addEventListener('change',function(){
+								var version=$(this).children('option:selected').attr('value');
+								var location=window.location;
+								var url=location.href;
+								new_url=url.replace(window.location.hostname+current_ver,window.location.hostname+version)
+								if(url!=new_url)window.location.assign(new_url);})
+				});
+	</script>
 
 </head>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 	<div id="titlearea">
-		<table cellspacing="0" cellpadding="0">
-			<tbody>
-				<tr style="height: 56px;">
-					<td id="projectalign" style="padding-left: 0.5em;">
-						<div id="projectname">$projectname
-							<span id="projectnumber">$projectnumber</span>
-						</div>
-						<div id="projectbrief">$projectbrief</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<img src="$relpath^$projectlogo" style="float: left;padding: 1%;width: 5%;">
+		<div id="projectname">$projectname
+			<span id="projectnumber">$projectnumber</span>
+		<div id="projectbrief">$projectbrief</div>
+		</div>
 	</div>
+
 </div>
