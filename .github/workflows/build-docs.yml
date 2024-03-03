@@ -30,35 +30,21 @@ jobs:
       - name: Create temp directories
         run: |
           cmake -E make_directory ${{runner.temp}}/build
-          cmake -E make_directory ${{runner.temp}}/prev_docs
       
-      - name: Download prev docs
-        continue-on-error: true
-        working-directory: ${{ runner.temp }}/prev_docs
-        run: |
-          wget ${{ steps.deployment.outputs.page_url }}/docs.tar
-          cmake -E tar xvf docs.tar -C downloads
-          awk '$1=$1' ORS=' ' downloads/tags > itags
-
       - name: Configure
         working-directory: ${{ runner.temp }}/build
-        run: cmake -DBUILD_DOCS=ON -DBUILD_TESTING=OFF -DDOXYGEN_PROJECT_NUMBER="'$(cat ${{ runner.temp }}/prev_docs/itags)'" ${{ github.workspace }}
+        run: cmake -DBUILD_DOCS=ON -DBUILD_TESTING=OFF  ${{ github.workspace }}
+
 
       - name: Build docs
         working-directory: ${{ runner.temp }}/build
         run: cmake --build . --target doxygen_docs 
 
       - name: Package
-        continue-on-error: true
-        working-directory: ${{ runner.temp }}/prev_docs
+        working-directory: ${{ github.workspace }}/doc/html/
         run: |
-          rm -rf downloads/${GITHUB_REF#refs/*/}
-          cp -r ${{ github.workspace }}/doc/html/ downloads/${GITHUB_REF#refs/*/}
-          grep -qxF "'${GITHUB_REF#refs/*/}'" downloads/tags || echo  "'${GITHUB_REF#refs/*/}'">> downloads/tags 
-
           cmake -E make_directory ${{runner.temp}}/page-packages
-          cmake -E tar c downloads/docs.tar -- downloads/
-          cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- downloads/
+          cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- .
 
       - uses: actions/upload-artifact@v4
         with:
