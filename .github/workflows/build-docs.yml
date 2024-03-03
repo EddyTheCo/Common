@@ -33,7 +33,7 @@ jobs:
           cmake -E make_directory ${{runner.temp}}/prev_docs
       
       - name: Download prev docs
-        continue-on-error: true.
+        continue-on-error: true
         working-directory: ${{ runner.temp }}/prev_docs
         run: |
           wget ${{ steps.deployment.outputs.page_url }}/docs.tar
@@ -49,7 +49,7 @@ jobs:
         run: cmake --build . --target doxygen_docs 
 
       - name: Package
-        continue-on-error: true.
+        continue-on-error: true
         working-directory: ${{ runner.temp }}/prev_docs
         run: |
           rm -rf downloads/${GITHUB_REF#refs/*/}
