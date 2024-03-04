@@ -2,20 +2,20 @@ name: build-docs
 
 on:
   workflow_call:
-    
+
 jobs:
   configure-deploy:
     runs-on: ubuntu-latest
     permissions:
-      pages: write      
-      id-token: write  
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
-          
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -25,28 +25,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake doxygen python3-pip
           pip3 install doxyqml
-          
 
-      - name: Create build directory
-        run:  cmake -E make_directory ${{runner.temp}}/build
 
+      - name: Create temp directories
+        run: |
+          cmake -E make_directory ${{runner.temp}}/build
+      
       - name: Configure
         working-directory: ${{ runner.temp }}/build
-        run: cmake -DBUILD_DOCS=ON ${{ github.workspace }}
-      
+        run: cmake -DBUILD_DOCS=ON -DBUILD_TESTING=OFF  ${{ github.workspace }}
+
+
       - name: Build docs
         working-directory: ${{ runner.temp }}/build
         run: cmake --build . --target doxygen_docs 
-      
+
       - name: Package
         working-directory: ${{ github.workspace }}/doc/html/
         run: |
           cmake -E make_directory ${{runner.temp}}/page-packages
           cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- .
-      
+
       - uses: actions/upload-artifact@v4
         with:
-          name: 'github-pages' 
+          name: 'github-pages'
           path:  ${{runner.temp}}/page-packages/*
 
       - name: Deploy to GitHub Pages
