@@ -12,7 +12,7 @@ on:
         default: ''
         type: string 
       qtVersion:
-        default: '6.5.0'
+        default: '6.6.0'
         type: string  
       test:
         default: true
@@ -52,14 +52,14 @@ jobs:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
-
+          tools: 'tools_ifw'
 
       - name: Create build directory
         run:  cmake -E make_directory ${{runner.temp}}/build
 
       - name: Configure
         working-directory: ${{ runner.temp }}/build
-        run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON  ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install ${{ github.workspace }}
+        run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install ${{ github.workspace }}
       
       - name: Build
         working-directory: ${{ runner.temp }}/build
@@ -78,22 +78,20 @@ jobs:
         if: startsWith(inputs.os, 'macos')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "DragNDrop;TGZ" --config CPackConfig.cmake
-          cmake -E remove_directory package/_CPack_Packages
+          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
 
       - name: Binary Package Windows
         if: startsWith(inputs.os, 'windows')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "NSIS;TGZ" --config CPackConfig.cmake
-          cmake -E remove_directory package/_CPack_Packages
+          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
       
       - name: Binary Package Ubuntu
         if: startsWith(inputs.os, 'ubuntu')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "DEB;TGZ" --config CPackConfig.cmake
-          cmake -E remove_directory package/_CPack_Packages
+          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
+
 
       - uses: actions/upload-artifact@v4
         with:

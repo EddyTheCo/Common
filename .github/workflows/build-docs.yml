@@ -51,6 +51,3 @@ jobs:
           name: 'github-pages'
           path:  ${{runner.temp}}/page-packages/*
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
