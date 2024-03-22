@@ -5,6 +5,9 @@ on:
       os:
         default: 'ubuntu-latest'
         type: string  
+      artifactId:
+        default: ''
+        type: string  
       cmakeArgs:
         default: ''
         type: string
@@ -95,7 +98,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.os }}_${{ inputs.cmakeArgs }} 
+          name: ${{ inputs.os }}_${{ inputs.artifactId }} 
           path: ${{ runner.temp }}/build/package/* 
       
 
