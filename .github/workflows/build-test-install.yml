@@ -79,9 +79,9 @@ jobs:
 
       - name: Binary Package Macos
         if: startsWith(inputs.os, 'macos')
-        working-directory: ${{ runner.temp }}/build
+        working-directory: ${{ runner.temp }}/install
         run: |
-          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cpack -B  ${{ runner.temp }}/build/package -G "IFW;TGZ" --config  ${{ runner.temp }}/build/CPackConfig.cmake
 
       - name: Binary Package Windows
         if: startsWith(inputs.os, 'windows')
