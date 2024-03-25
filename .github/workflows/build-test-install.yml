@@ -81,19 +81,19 @@ jobs:
         if: startsWith(inputs.os, 'macos')
         working-directory: ${{ runner.temp }}/build 
         run: |
-          cpack -B  package -G "IFW;TGZ" --config  CPackConfig.cmake
+          cpack -V -B  package -G "IFW;TGZ" --config  CPackConfig.cmake
 
       - name: Binary Package Windows
         if: startsWith(inputs.os, 'windows')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
       
       - name: Binary Package Ubuntu
         if: startsWith(inputs.os, 'ubuntu')
         working-directory: ${{ runner.temp }}/build
         run: |
-          cpack -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
 
 
       - uses: actions/upload-artifact@v4
