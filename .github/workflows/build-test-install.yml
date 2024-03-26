@@ -94,6 +94,7 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cat /home/runner/work/_temp/build/package/_CPack_Packages/Linux/IFW/IFWOutput.log
 
 
       - uses: actions/upload-artifact@v4
