@@ -92,17 +92,8 @@ jobs:
       - name: Binary Package Ubuntu
         if: startsWith(inputs.os, 'ubuntu')
         working-directory: ${{ runner.temp }}/build
-        continue-on-error: true
         run: |
           cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
-
-          
-      - name: debug
-        if: startsWith(inputs.os, 'ubuntu')
-        working-directory: ${{ runner.temp }}/build
-        continue-on-error: true
-        run: |
-          cat /home/runner/work/_temp/build/package/_CPack_Packages/Linux/IFW/IFWOutput.log
 
 
       - uses: actions/upload-artifact@v4
