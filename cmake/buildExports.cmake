@@ -6,6 +6,10 @@ function(build_exports)
 		NAMESPACE ${PROJECT_NAME}::
 		COMPONENT ${PROJECT_NAME}
 		)
+	install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/Esterv/${PROJECT_NAME}
+		COMPONENT ${PROJECT_NAME}
+		)
 	include(CMakePackageConfigHelpers)
 	configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
 		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
