@@ -1,25 +1,92 @@
-@import url('lightmode.css');
-@import url('darkmode.css') screen;
 body, table, div, p, dl {
 	font: unset;
+	font-family: 'Titillium Web', Arial, Helvetica, sans-serif;
+	font-size: 1.0vw;
 }
 body {
-	color: var(--main-color);
-	font-family: 'Ubuntu Condensed';
+	color: #e3e3e4;
+	background-color: #1e1e1e;
 }
 a {
-	color: var(--link-color);
+	color: #7174b2;
 }
-
+.alphachar a {
+	color: white;
+}
+div.toc {
+	background-color: unset;
+	border: 1px solid #D8DFEE;
+	border-radius: 7px 7px 7px 7px;
+	float: right;
+	height: auto;
+	margin: 0 8px 10px 10px;
+	width: 200px;
+}
+.PageDoc {
+	margin-left:2%;
+	margin-right:2%;
+	float:left;
+	width:96%;
+}
+#MSearchBox {
+	border-radius: unset;
+}
+div.toc h3 {
+	color: unset;
+	font: unset;
+	font-size: 1.1vw;
+}
+#titlearea
+{
+	border-bottom: unset;
+	float:left;
+	width:100%;
+	background-color:#10141c;
+}
+#main-nav{
+	background-color: #000000;
+	float:left;
+	width:100%;
+}
+#projectname
+{
+	float:left;
+	margin: 0px;
+	padding: 1%;
+	width: 80%;
+}
+#projectbrief {
+	font-size: 1.2vw;
+	width:100%;
+	float: left;
+}
+div.toc li {
+	background: unset;
+	font: unset;
+	font-family: "Titillium Web",sans-serif;
+}
+.select {
+	font-size: 1.5vw;
+	text-decoration: none;
+	margin: 0;
+	border: none;
+	background-color: unset;
+	color: white;
+}
 .contents a:visited {
-	color: var(--link-color);
+	color: #8689d6;
 }
 .context h1, .context h2, .context h3, .context h4, .context h5 {
-	color:var(--main-color-alt);
+	color: #e3e3e4;
+	margin-bottom: 0.75em;
+	font-size: 2.25em;
+	font-weight: 300;
+	letter-spacing: -1px;
+	line-height: 1.15em;
 }
 h2.groupheader {
-	color: var(--main-color-alt);
-	border-bottom:	2px var(--content-border-color) solid;
+	color: #e3e3e4;
+	border-bottom:	2px  #222840 solid;
 }
 .directory tr.even {
 	background-color: unset;
@@ -29,11 +96,11 @@ div.header
 	background-image: unset;
 	background-repeat:unset;
 	background-color: unset;
-	border-bottom:	2px var(--content-border-color) solid;
+	border-bottom:	2px #222840 solid;
 }
 div.directory {
 	margin: unset;
-	border-top: 2px var(--content-border-color) solid;
+	border-top: 2px #222840 solid;
 	border-bottom: unset;
 }
 .mdescLeft, .mdescRight,
@@ -78,7 +145,7 @@ span.mlabel {
 .memitem {
 	background-color: unset;
 	filter: brightness(85%);
-	color: var(--main-color-alt)
+	color: #e3e3e4 ;
 }
 .memproto, dl.reflist dt {
 	border-top: unset;
@@ -118,7 +185,7 @@ span.mlabel {
 hr {
 	height: 0px;
 	border: none;
-	border-top:	2px var(--content-border-color) solid;
+	border-top:	2px  #222840 solid;
 }
 .icon {
 	background-color: unset;
@@ -138,10 +205,6 @@ hr {
 {
 	visibility: hidden;
 }
-#titlearea
-{
-	border-bottom: unset;
-}
 .topbar_breadcrump
 {
 	width:100%;
@@ -155,31 +218,28 @@ ul.breadcrump {
 }
 ul.breadcrump > li {
 	display: inline;
-	font-family: 'Ubuntu Condensed';font-size: 2vw;
+	font-family: 'Titillium Web';font-size: 2vw;
 }
 #top
 {
-	background-color: var(--header-bg-color);
+	background-color: #0c0c0c;
 }
 .sm-dox a,
 .sm-dox a:focus,
 .sm-dox a:hover,
 .sm-dox a:active {
-	font-family:unset;
-	font-weight:unset;
+	font-family: unset;
 	text-shadow: unset;
-	color: var(--header-color);
+	color: #15981a;
+	;
 }
 
-#main-nav{
-	background-color: var(--content-bg-color-alt);
-}
 .sm-dox ul a,
 .sm-dox ul a:focus,
 .sm-dox ul a:hover,
 .sm-dox ul a:active {
-	background-color: var(--content-bg-color-alt);
-	color: var(--header-color);
+	background-color: #10131f;
+	color: #17a81a;
 }
 .sm-dox ul {
 	border: unset;
@@ -190,8 +250,8 @@ ul.breadcrump > li {
 .sm-dox ul a:hover {
 	background-image: unset;
 	background-repeat:unset;
-	color:var(--main-color);
-	text-shadow:unset
+	color:#c1c1c4;
+	text-shadow:unset;
 }
 .sm-dox a,
 .sm-dox a:focus,
@@ -204,7 +264,8 @@ ul.breadcrump > li {
 	border-radius:unset;
 }
 div.fragment {
-	background-color: unset;
 	border: unset;
+	background-color: #313648;
+	padding: 1%;
 }
 
