@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ inputs.os }}
     continue-on-error: true  
     permissions:
-      pull_requests: write
+      pull-requests: write
 
     steps:
           
