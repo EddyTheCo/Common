@@ -77,8 +77,13 @@ jobs:
         continue-on-error: true
         working-directory: ${{ runner.temp }}/build
         run: |
-          cmake --build . -t all_qmllint_json
+          curl -L -X POST -H 'Content-type: application/json' \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+          -d "new comment" || true
+          cmake --build . -t all_qmllint_json || true
           comment=$(cat *_qmllint.json)
+          echo $comment
           curl -L -X POST -H 'Content-type: application/json' \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
