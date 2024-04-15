@@ -29,6 +29,7 @@ jobs:
   build_test_package:
     runs-on: ${{ inputs.os }}
     continue-on-error: true  
+    pull_requests:write
 
     steps:
           
