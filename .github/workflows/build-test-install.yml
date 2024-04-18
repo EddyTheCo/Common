@@ -82,7 +82,7 @@ jobs:
         run: |
           cmake --build . -t all_qmllint_json || true
 
-      - uses: EddyTheCo/qmllint-action/@testing
+      - uses: EddyTheCo/qmllint-action/@develop
         if: ${{ (startsWith(inputs.os, 'ubuntu'))&&(inputs.qmllint)&&(startsWith(github.base_ref, 'develop')) }}
         with:
           jsondir: ${{ runner.temp }}/build
