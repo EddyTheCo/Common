@@ -79,12 +79,15 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           cmake --build . -t all_qmllint_json || true
+          echo ${{ github.event.number }} > pr_number
 
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.qmllint }}
         with:
           name: qmllint 
-          path: ${{ runner.temp }}/build/*_qmllint.json 
+          path: |
+            ${{ runner.temp }}/build/*_qmllint.json
+            ${{ runner.temp }}/build/pr_number
 
       - name: Test
         if: inputs.test
