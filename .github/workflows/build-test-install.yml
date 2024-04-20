@@ -19,7 +19,11 @@ on:
         type: string  
       test:
         default: true
-        type: boolean  
+        type: boolean
+      qmllint:
+        default: false
+        type: boolean
+
 
 jobs:
   build_test_package:
@@ -64,9 +68,26 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DCPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install ${{ github.workspace }}
       
+            
       - name: Build
         working-directory: ${{ runner.temp }}/build
         run: cmake --build .   
+
+      - name: Qmllint
+        if: ${{ inputs.qmllint }}
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}/build
+        run: |
+          cmake --build . -t all_qmllint_json || true
+          echo ${{ github.event.number }} > pr_number
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.qmllint }}
+        with:
+          name: qmllint 
+          path: |
+            ${{ runner.temp }}/build/*_qmllint.json
+            ${{ runner.temp }}/build/pr_number
 
       - name: Test
         if: inputs.test
@@ -94,7 +115,6 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
-
 
       - uses: actions/upload-artifact@v4
         with:
