@@ -27,6 +27,7 @@ function(build_exports)
 		COMPONENT ${PROJECT_NAME}-dev
 		)
 	export(EXPORT ${PROJECT_NAME}-config
+		NAMESPACE ${PROJECT_NAME}:: 
 		FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
 		)
 endfunction()
