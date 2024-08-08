@@ -3,7 +3,7 @@ function(build_exports)
 
 	install(EXPORT ${PROJECT_NAME}-config
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-		NAMESPACE ${PROJECT_NAME}::
+		NAMESPACE Esterv::
 		COMPONENT ${PROJECT_NAME}-dev
 		)
 	install(FILES ${CMAKE_SOURCE_DIR}/LICENSE
@@ -27,7 +27,7 @@ function(build_exports)
 		COMPONENT ${PROJECT_NAME}-dev
 		)
 	export(EXPORT ${PROJECT_NAME}-config
-		NAMESPACE ${PROJECT_NAME}:: 
+		NAMESPACE Esterv:: 
 		FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
 		)
 endfunction()
