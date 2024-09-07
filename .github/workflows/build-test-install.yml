@@ -56,7 +56,6 @@ jobs:
       - name: Configure
         run: |
           export CPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7"
-          cmake --workflow  --preset default-release-shared
           cmake --workflow  --preset default-develop
 
       - name: Create docs and changelog
@@ -78,14 +77,12 @@ jobs:
       - name: Package
         run: |
           cpack --preset default-develop 
-          cpack --preset default-release-shared
 
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.os }}
-          path: |
-            build/release/packages/*
-            build/debug/packages/*
+          path: build/release/packages/*
+
       - uses: actions/upload-artifact@v4
         if: startsWith(inputs.os, 'ubuntu')
         with:
