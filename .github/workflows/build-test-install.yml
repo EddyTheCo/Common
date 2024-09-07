@@ -62,17 +62,18 @@ jobs:
       - name: Create docs and changelog
         if: startsWith(inputs.os, 'ubuntu')
         run: |
+          cmake -E make_directory ${{runner.temp}}/common
           cmake --workflow  --preset default-documentation
-          cp -r doc ${{ runner.temp }}/
-          git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/CHANGELOG.md
+          cp -r doc ${{ runner.temp }}/common
+          git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/common/CHANGELOG.md
 
       - name: Qmllint
         if: ${{ inputs.qmllint }}
         continue-on-error: true
         run: |
           cmake --workflow  --preset qmllint || true
-          cp build/release/*_qmllint.json ${{ runner.temp }}/
-          echo ${{ github.event.number }} >  ${{ runner.temp }}/pr_number
+          cp build/release/*_qmllint.json ${{ runner.temp }}/common/
+          echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number
 
       - name: Package
         run: |
@@ -86,7 +87,8 @@ jobs:
             build/release/packages/*
             build/debug/packages/*
       - uses: actions/upload-artifact@v4
+        if: startsWith(inputs.os, 'ubuntu')
         with:
           name: "common"
           path: |
-            ${{ runner.temp }}/*
+            ${{ runner.temp }}/common*
