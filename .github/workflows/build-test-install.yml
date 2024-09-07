@@ -1,19 +1,16 @@
 name: push-build-release
-on: 
+on:
   workflow_call:
     inputs:
       os:
         default: 'ubuntu-latest'
-        type: string  
-      artifactId:
-        default: ''
-        type: string  
+        type: string
       qtModules:
         default: ''
         type: string 
       qtVersion:
         default: '6.7.0'
-        type: string  
+        type: string
       qmllint:
         default: false
         type: boolean
@@ -22,14 +19,14 @@ on:
 jobs:
   build_test_package:
     runs-on: ${{ inputs.os }}
-    continue-on-error: true  
+    continue-on-error: true
 
     steps:
-          
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Install dependencies on windows
         if: startsWith(inputs.os, 'windows')
         run: |
@@ -61,13 +58,14 @@ jobs:
           export CPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7"
           cmake --workflow  --preset default-release-shared
           cmake --workflow  --preset default-develop
-      
-      - name: Build docs
+
+      - name: Create docs and changelog
         if: startsWith(inputs.os, 'ubuntu')
         run: |
           cmake --workflow  --preset default-documentation
           cp -r doc ${{ runner.temp }}/
-          
+          git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/CHANGELOG.md
+
       - name: Qmllint
         if: ${{ inputs.qmllint }}
         continue-on-error: true
@@ -76,16 +74,19 @@ jobs:
           cp build/release/*_qmllint.json ${{ runner.temp }}/
           echo ${{ github.event.number }} >  ${{ runner.temp }}/pr_number
 
-      - name: Package 
+      - name: Package
         run: |
           cpack --preset default-develop 
           cpack --preset default-release-shared
-          cp build/release/packages/* ${{ runner.temp }}/ 
-          cp build/debug/packages/* ${{ runner.temp }}/ 
-          git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/CHANGELOG.md
-        
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.os }}_${{ inputs.artifactId }} 
-          path: ${{ runner.temp }}/* 
+          name: ${{ inputs.os }}
+          path: |
+            build/release/packages/*
+            build/debug/packages/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "common"
+          path: |
+            ${{ runner.temp }}/*
