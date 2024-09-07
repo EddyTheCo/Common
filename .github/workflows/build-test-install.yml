@@ -19,7 +19,6 @@ on:
 jobs:
   build_test_package:
     runs-on: ${{ inputs.os }}
-    continue-on-error: true
 
     steps:
 
@@ -53,7 +52,7 @@ jobs:
           modules: ${{ inputs.qtModules }}  
           tools: 'tools_ifw'
 
-      - name: Configure
+      - name: Configure-build-test
         env:
           CPACK_IFW_ROOT: "${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7"
         run: cmake --workflow  --preset default-develop
