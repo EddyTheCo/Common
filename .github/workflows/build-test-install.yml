@@ -8,18 +8,12 @@ on:
       artifactId:
         default: ''
         type: string  
-      cmakeArgs:
-        default: ''
-        type: string
       qtModules:
         default: ''
         type: string 
       qtVersion:
-        default: '6.6.0'
+        default: '6.7.0'
         type: string  
-      test:
-        default: true
-        type: boolean
       qmllint:
         default: false
         type: boolean
@@ -46,7 +40,8 @@ jobs:
         if: startsWith(inputs.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build cmake doxygen
+          sudo apt-get install ninja-build cmake doxygen python3-pip
+          pip3 install doxyqml
           
       - name: Install dependencies on macos
         if: startsWith(inputs.os, 'macos')
@@ -54,71 +49,44 @@ jobs:
           brew install cmake ninja
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
           tools: 'tools_ifw'
 
-      - name: Create build directory
-        run:  cmake -E make_directory ${{runner.temp}}/build
-
       - name: Configure
         working-directory: ${{ runner.temp }}/build
-        run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DCPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install ${{ github.workspace }}
+        run: |
+          export CPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7"
+          cmake --workflow  --preset default-release-shared
+          cmake --workflow  --preset default-develop
       
-            
-      - name: Build
-        working-directory: ${{ runner.temp }}/build
-        run: cmake --build .   
-
+      - name: Build docs
+        if: startsWith(inputs.os, 'ubuntu')
+        run: |
+          cmake --workflow  --preset default-documentation
+          cp -r doc ${{ runner.temp }}/
+          
       - name: Qmllint
         if: ${{ inputs.qmllint }}
         continue-on-error: true
-        working-directory: ${{ runner.temp }}/build
         run: |
-          cmake --build . -t all_qmllint_json || true
-          echo ${{ github.event.number }} > pr_number
+          cmake --workflow  --preset qmllint || true
+          cp build/release/*_qmllint.json ${{ runner.temp }}/
+          echo ${{ github.event.number }} >  ${{ runner.temp }}/pr_number
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ inputs.qmllint }}
-        with:
-          name: qmllint 
-          path: |
-            ${{ runner.temp }}/build/*_qmllint.json
-            ${{ runner.temp }}/build/pr_number
-
-      - name: Test
-        if: inputs.test
-        working-directory: ${{ runner.temp }}/build
-        run: ninja test
-
-      - name: Install
-        working-directory: ${{ runner.temp }}/build
-        run: cmake --install .
-
-      - name: Binary Package Macos
-        if: startsWith(inputs.os, 'macos')
-        working-directory: ${{ runner.temp }}/build 
+      - name: Package 
         run: |
-          cpack -V -B  package -G "IFW;TGZ" --config  CPackConfig.cmake
-
-      - name: Binary Package Windows
-        if: startsWith(inputs.os, 'windows')
-        working-directory: ${{ runner.temp }}/build
-        run: |
-          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
-      
-      - name: Binary Package Ubuntu
-        if: startsWith(inputs.os, 'ubuntu')
-        working-directory: ${{ runner.temp }}/build
-        run: |
-          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cpack --preset default-develop 
+          cpack --preset default-release-shared
+          cp build/release/packages/* ${{ runner.temp }}/ 
+          cp build/debug/packages/* ${{ runner.temp }}/ 
+          git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/CHANGELOG.md
+        
 
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.os }}_${{ inputs.artifactId }} 
-          path: ${{ runner.temp }}/build/package/* 
-      
-
+          path: ${{ runner.temp }}/* 
