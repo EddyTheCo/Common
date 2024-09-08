@@ -62,7 +62,7 @@ jobs:
         run: |
           cmake -E make_directory ${{runner.temp}}/common
           cmake --workflow  --preset default-documentation
-          cp -r doc ${{ runner.temp }}/common
+          cp -r doc/html ${{ runner.temp }}/common/
           git log $(git describe --tags --abbrev=0)^..HEAD --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/common/CHANGELOG.md
 
       - name: Qmllint
@@ -87,4 +87,4 @@ jobs:
         with:
           name: "common"
           path: |
-            ${{ runner.temp }}/common*
+            ${{ runner.temp }}/common/*
