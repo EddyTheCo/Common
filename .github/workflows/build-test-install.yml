@@ -11,10 +11,6 @@ on:
       qtVersion:
         default: '6.7.0'
         type: string
-      qmllint:
-        default: false
-        type: boolean
-
 
 jobs:
   build_test_package:
@@ -66,12 +62,12 @@ jobs:
           git log $(git rev-list --tags --skip=1 --max-count=1 | xargs git describe --tags --abbrev=0)..$(git describe --tags --abbrev=0) --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/common/CHANGELOG.md
 
       - name: Qmllint
-        if: ${{ inputs.qmllint }}
+        if: startsWith(inputs.os, 'ubuntu')
         continue-on-error: true
         run: |
-          cmake --workflow  --preset qmllint || true
-          cp build/release/*_qmllint.json ${{ runner.temp }}/common/
-          echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number
+          cmake --workflow  --preset default-qmllint || true
+          cp build/release/*_qmllint.json ${{ runner.temp }}/common/ || true
+          echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number || true
 
       - name: Package
         run: |
