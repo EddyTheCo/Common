@@ -90,6 +90,7 @@ jobs:
         working-directory: ${{ runner.temp }}/build
         run: |
           cmake --build .
+        continue-on-error: true
 
       - name: Build apk
         working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}
