@@ -43,7 +43,7 @@ jobs:
         id: setup-jdk
         with:
           distribution: 'oracle'
-          java-version: '20'
+          java-version: '17'
 
       - name: Configure SDK
         uses: android-actions/setup-android@v3
@@ -53,7 +53,7 @@ jobs:
         uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
-          ndk-version: r25c
+          ndk-version: r26b
           add-to-path: false
           link-to-sdk: true
 
