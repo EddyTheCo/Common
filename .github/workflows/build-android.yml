@@ -64,7 +64,7 @@ jobs:
           version: ${{ inputs.qtVersion }}
           host: 'linux'
           target: 'desktop'
-          arch: 'gcc_64'
+          arch: 'linux_gcc_64'
           modules: ${{ inputs.qtModules }}
 
       - name: Install Qt
