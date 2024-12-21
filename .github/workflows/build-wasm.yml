@@ -45,7 +45,7 @@ jobs:
           actions-cache-folder: 'emsdk-cache'
 
       - name: Install Qt 
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
@@ -55,7 +55,7 @@ jobs:
           modules: ${{ inputs.qtModules }} 
 
       - name: Install Qt wasm
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
