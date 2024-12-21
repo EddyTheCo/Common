@@ -95,7 +95,7 @@ jobs:
       - name: Build apk
         working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}
         run: |
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/${{ inputs.subdir }}/android-build/ --input ${{ runner.temp }}/build/${{ inputs.subdir }}/android-${{ inputs.qtTarget }}-deployment-settings.json --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign --stacktrace --debug --scan ${{ github.workspace }}/${{ inputs.subdir }}/android/android_release.keystore  estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/bin/androiddeployqt --output ${{ runner.temp }}/build/${{ inputs.subdir }}/android-build/ --input ${{ runner.temp }}/build/${{ inputs.subdir }}/android-${{ inputs.qtTarget }}-deployment-settings.json --jdk ${{ steps.setup-jdk.outputs.path }} --gradle --release --sign ${{ github.workspace }}/${{ inputs.subdir }}/android/android_release.keystore  estervtech --storepass ${{ secrets.QT_ANDROID_KEYSTORE_STORE_PASS }}
 
       - name: Package
         working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}/android-build/build/outputs/apk/release/
