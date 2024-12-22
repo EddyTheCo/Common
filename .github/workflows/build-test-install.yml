@@ -1,41 +1,27 @@
 name: push-build-release
-on: 
+on:
   workflow_call:
     inputs:
       os:
         default: 'ubuntu-latest'
-        type: string  
-      artifactId:
-        default: ''
-        type: string  
-      cmakeArgs:
-        default: ''
         type: string
       qtModules:
         default: ''
         type: string 
       qtVersion:
-        default: '6.6.0'
-        type: string  
-      test:
-        default: true
-        type: boolean
-      qmllint:
-        default: false
-        type: boolean
-
+        default: '6.8.1'
+        type: string
 
 jobs:
   build_test_package:
     runs-on: ${{ inputs.os }}
-    continue-on-error: true  
 
     steps:
-          
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Install dependencies on windows
         if: startsWith(inputs.os, 'windows')
         run: |
@@ -46,7 +32,8 @@ jobs:
         if: startsWith(inputs.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build cmake doxygen
+          sudo apt-get install ninja-build cmake doxygen pipx
+          pipx install doxyqml
           
       - name: Install dependencies on macos
         if: startsWith(inputs.os, 'macos')
@@ -54,71 +41,46 @@ jobs:
           brew install cmake ninja
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           modules: ${{ inputs.qtModules }}  
           tools: 'tools_ifw'
 
-      - name: Create build directory
-        run:  cmake -E make_directory ${{runner.temp}}/build
+      - name: Configure-build-test
+        env:
+          CPACK_IFW_ROOT: "${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7"
+        run: cmake --workflow  --preset default-develop
 
-      - name: Configure
-        working-directory: ${{ runner.temp }}/build
-        run: qt-cmake -G Ninja -DCMAKE_BUILD_TYPE="release" -DCPACK_IFW_ROOT="${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.7" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX=${{ runner.temp }}/install ${{ github.workspace }}
-      
-            
-      - name: Build
-        working-directory: ${{ runner.temp }}/build
-        run: cmake --build .   
+      - name: Create docs and changelog
+        if: startsWith(inputs.os, 'ubuntu')
+        run: |
+          cmake -E make_directory ${{runner.temp}}/common
+          cmake --workflow  --preset default-documentation
+          cp -r doc/html ${{ runner.temp }}/common/
+          git log $(git rev-list --tags --skip=1 --max-count=1 | xargs git describe --tags --abbrev=0)..$(git describe --tags --abbrev=0) --pretty=format:"* %h - %s (%an, %ar)" > ${{ runner.temp }}/common/CHANGELOG.md
 
       - name: Qmllint
-        if: ${{ inputs.qmllint }}
-        continue-on-error: true
-        working-directory: ${{ runner.temp }}/build
-        run: |
-          cmake --build . -t all_qmllint_json || true
-          echo ${{ github.event.number }} > pr_number
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ inputs.qmllint }}
-        with:
-          name: qmllint 
-          path: |
-            ${{ runner.temp }}/build/*_qmllint.json
-            ${{ runner.temp }}/build/pr_number
-
-      - name: Test
-        if: inputs.test
-        working-directory: ${{ runner.temp }}/build
-        run: ninja test
-
-      - name: Install
-        working-directory: ${{ runner.temp }}/build
-        run: cmake --install .
-
-      - name: Binary Package Macos
-        if: startsWith(inputs.os, 'macos')
-        working-directory: ${{ runner.temp }}/build 
-        run: |
-          cpack -V -B  package -G "IFW;TGZ" --config  CPackConfig.cmake
-
-      - name: Binary Package Windows
-        if: startsWith(inputs.os, 'windows')
-        working-directory: ${{ runner.temp }}/build
-        run: |
-          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
-      
-      - name: Binary Package Ubuntu
         if: startsWith(inputs.os, 'ubuntu')
-        working-directory: ${{ runner.temp }}/build
+        continue-on-error: true
         run: |
-          cpack -V -B package -G "IFW;TGZ" --config CPackConfig.cmake
+          cmake --workflow  --preset default-qmllint || true
+          cp build/release/*_qmllint.json ${{ runner.temp }}/common/ || true
+          echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number || true
+
+      - name: Package
+        run: |
+          cpack --preset default-develop 
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.os }}_${{ inputs.artifactId }} 
-          path: ${{ runner.temp }}/build/package/* 
-      
+          name: ${{ inputs.os }}
+          path: build/release/packages-dev/*
 
+      - uses: actions/upload-artifact@v4
+        if: startsWith(inputs.os, 'ubuntu')
+        with:
+          name: "common"
+          path: |
+            ${{ runner.temp }}/common/*

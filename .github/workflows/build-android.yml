@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       qtVersion:
-        default: '6.6.0'
+        default: '6.8.1'
         type: string
       subdir: 
         default: ''
@@ -43,7 +43,7 @@ jobs:
         id: setup-jdk
         with:
           distribution: 'oracle'
-          java-version: '20'
+          java-version: '17'
 
       - name: Configure SDK
         uses: android-actions/setup-android@v3
@@ -53,22 +53,22 @@ jobs:
         uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
-          ndk-version: r25c
+          ndk-version: r26b
           add-to-path: false
           link-to-sdk: true
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           host: 'linux'
           target: 'desktop'
-          arch: 'gcc_64'
+          arch: 'linux_gcc_64'
           modules: ${{ inputs.qtModules }}
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
@@ -77,19 +77,14 @@ jobs:
           arch: ${{ inputs.qtArch }}
           modules: ${{ inputs.qtModules }}
 
-      - name: Create build directory
-        run: cmake -E make_directory ${{runner.temp}}/build
-
       - name: Configure
-        working-directory: ${{ runner.temp }}/build
         run: |
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="install" -S ${{ github.workspace }} -B ${{ runner.temp }}/build
 
       - name: Build
-        working-directory: ${{ runner.temp }}/build
         run: |
-          cmake --build .
+          cmake --build ${{ runner.temp }}/build
 
       - name: Build apk
         working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}

@@ -1,0 +1,71 @@
+name: Code Format
+on:
+  workflow_call:
+    inputs:
+      JSON:
+        default: true
+        type: boolean 
+      CMake:
+        default: true
+        type: boolean 
+      QML:
+        default: true
+        type: boolean 
+      C:
+        default: true
+        type: boolean 
+
+jobs:
+  format:
+    runs-on: ubuntu-latest 
+
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v4
+        
+      - name: clang-format
+        if: startsWith(inputs.C,'true')
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang-format
+          find . -regex '.*\.\(cpp\|hpp\|cu\|cuh\|c\|h\)' -exec clang-format -style=file -i {} \;
+      
+      - name: Install CMake format
+        if: startsWith(inputs.CMake,'true')
+        run: |
+          sudo apt-get update
+          sudo apt install pipx
+          pipx install cmakelang
+          find . -regex '.*\.\(cmake\)' -exec  cmake-format -i {} \;
+          find . -name  'CMakeLists.txt' -exec  cmake-format -i {} \;
+      
+      - name: Install JSON format
+        if: startsWith(inputs.JSON,'true')
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+          find . -regex '.*\.\(json\)' -exec bash -c "jq . {}  > {}.back; mv {}.back {} " \;
+      
+      - name: Install Qt
+        if: startsWith(inputs.QML,'true')
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: '==3.1.*'
+          version: '6.8.1'
+          arch: 'linux_gcc_64'
+
+      - name: qml format code
+        if: startsWith(inputs.QML,'true')
+        run: |
+          rm aqtinstall.log
+          find . -regex '.*\.\(qml\)' -exec  qmlformat  -i {} \;
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6.0.4
+        with:
+          commit-message: C/C++/QML formatted code
+          branch: formatted_code
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          title: Fix the format of your nice code
+          body: Every time you change the format, I am here to fix your mess.
