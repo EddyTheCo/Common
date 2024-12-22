@@ -77,20 +77,14 @@ jobs:
           arch: ${{ inputs.qtArch }}
           modules: ${{ inputs.qtModules }}
 
-      - name: Create build directory
-        run: cmake -E make_directory ${{runner.temp}}/build
-
       - name: Configure
-        working-directory: ${{ runner.temp }}/build
         run: |
           chmod +x ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake
-          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="../install" ${{ github.workspace }}
+          ${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/${{ inputs.qtArch }}/bin/qt-cmake -G Ninja  -DANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }} -DANDROID_SDK_ROOT=$ANDROID_SDK_ROOT -DQT_HOST_PATH=${{ github.workspace }}/../Qt/${{ inputs.qtVersion }}/gcc_64/ -DCMAKE_BUILD_TYPE="release" ${{ inputs.cmakeArgs }} -DCMAKE_INSTALL_PREFIX="install" -S ${{ github.workspace }} -B ${{ runner.temp }}/build
 
       - name: Build
-        working-directory: ${{ runner.temp }}/build
         run: |
-          cmake --build .
-        continue-on-error: true
+          cmake --build ${{ runner.temp }}/build
 
       - name: Build apk
         working-directory: ${{ runner.temp }}/build/${{ inputs.subdir }}
