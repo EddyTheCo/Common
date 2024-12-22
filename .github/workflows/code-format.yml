@@ -49,11 +49,11 @@ jobs:
       
       - name: Install Qt
         if: startsWith(inputs.QML,'true')
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
-          version: '6.6.0'
-          arch: 'gcc_64'
+          version: '6.8.1'
+          arch: 'linux_gcc_64'
 
       - name: qml format code
         if: startsWith(inputs.QML,'true')
@@ -65,7 +65,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6.0.4
         with:
           commit-message: C/C++/QML formatted code
-          branch: formattedCode
+          branch: formatted_code
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          title: Fixed the format of your nice code
+          title: Fix the format of your nice code
           body: Every time you change the format, I am here to fix your mess.
