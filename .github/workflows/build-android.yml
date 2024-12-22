@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       qtVersion:
-        default: '6.6.0'
+        default: '6.8.1'
         type: string
       subdir: 
         default: ''
