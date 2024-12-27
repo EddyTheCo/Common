@@ -66,7 +66,7 @@ jobs:
         continue-on-error: true
         run: |
           cmake --workflow  --preset default-qmllint || true
-          cp build/release/*_qmllint.json ${{ runner.temp }}/common/ || true
+          cp build/default-develop/*_qmllint.json ${{ runner.temp }}/common/ || true
           echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number || true
 
       - name: Package
