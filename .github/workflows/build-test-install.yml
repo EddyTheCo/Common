@@ -22,6 +22,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if formatted_code branch exists
+        if: ${{ (startsWith(inputs.os, 'ubuntu')) && (startsWith(github.base_ref, 'main')) }}
+        run: |
+          if git ls-remote --heads origin formatted_code | grep formatted_code; then
+              echo "Error: The 'formatted_code' branch exists. Formatting changes are not integrated.";
+              exit 1;
+          else
+              echo "The 'formatted_code' branch does not exist. Proceeding.";
+          fi
+
       - name: Install dependencies on windows
         if: startsWith(inputs.os, 'windows')
         run: |
