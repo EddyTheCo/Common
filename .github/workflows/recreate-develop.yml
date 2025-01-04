@@ -1,0 +1,29 @@
+name: Recreate develop
+on:
+  workflow_call:
+
+jobs:
+  create-develop-branch:
+    runs-on: ubuntu-latest
+    if: ${{ (github.event.pull_request.merged == true) && (startsWith(github.base_ref, 'main')) && (startsWith(github.head_ref, 'develop'))}}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: delete develop
+        run: |
+          git fetch origin
+          git push origin --delete develop || echo "Branch 'develop' does not exist on remote."
+
+      - name: Create 'develop' Branch
+        run: |
+          git checkout main
+          git checkout -b develop
+          git push origin develop
+
