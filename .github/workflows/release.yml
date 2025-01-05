@@ -1,0 +1,80 @@
+name: Release update page
+on:
+  workflow_call:
+    inputs:
+      is_app:
+        default: false
+        type: boolean 
+      release:
+        default: false
+        type: boolean
+      release_wasm:
+        default: false
+        type: boolean
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest 
+
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+           path: artifacts
+      
+      - name: Release wasm
+        if: startsWith(inputs.release_wasm,'true')
+        run: |
+          mkdir artifacts/WASM
+          cmake -E tar c artifacts/WASM/webapp.tar -- artifacts/wasm/
+      
+      - name: Wasm webpage
+        if: startsWith(inputs.is_app,'true')
+        run: |
+          mv artifacts/wasm github-pages
+      
+      - name: Docs webpage
+        if: startsWith(inputs.is_app,'false')
+        run: |
+          mv artifacts/common/html github-pages
+
+      - name: Move packages to webpage
+        run: |
+          mkdir github-pages/packages/ ${{runner.temp}}/platforms/
+          mv artifacts/*/_CPack_Packages/* ${{runner.temp}}/platforms/
+          for i in ${{runner.temp}}/platforms/*; do mv $i/IFW/*/repository/* $i/; rm -rf $i/IFW $i/TGZ; done;
+          mv ${{runner.temp}}/platforms/* github-pages/packages/
+          rm -rf artifacts/*/_CPack_Packages
+          mv artifacts/common .
+
+      - name: Package github-page
+        working-directory: ${{ github.workspace }}/github-pages/
+        run: |
+          cmake -E make_directory ${{runner.temp}}/page-packages
+          cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- .
+
+      - name: Releases 
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/*/*
+          body_path: ./common/CHANGELOG.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 'github-pages'
+          path:  ${{runner.temp}}/page-packages/*
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
