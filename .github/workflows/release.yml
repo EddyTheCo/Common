@@ -65,6 +65,7 @@ jobs:
           cmake -E tar c ${{runner.temp}}/page-packages/github-pages.tar -- .
 
       - name: Releases 
+        if: startsWith(inputs.release,'true')
         uses: softprops/action-gh-release@v2
         with:
           files: ./artifacts/*/*
