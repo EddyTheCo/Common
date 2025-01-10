@@ -52,11 +52,11 @@ jobs:
       - name: Move packages to webpage
         run: |
           mkdir github-pages/packages/ ${{runner.temp}}/platforms/
-          mv artifacts/*/_CPack_Packages/* ${{runner.temp}}/platforms/
-          for i in ${{runner.temp}}/platforms/*; do mv $i/IFW/*/repository/* $i/; rm -rf $i/IFW $i/TGZ; done;
-          mv ${{runner.temp}}/platforms/* github-pages/packages/
+          mv artifacts/*/_CPack_Packages/* ${{runner.temp}}/platforms/ || true
+          for i in ${{runner.temp}}/platforms/*; do mv $i/IFW/*/repository/* $i/ || true; rm -rf $i/IFW $i/TGZ; done;
+          mv ${{runner.temp}}/platforms/* github-pages/packages/ || true
           rm -rf artifacts/*/_CPack_Packages
-          mv artifacts/common .
+          mv artifacts/common . || true
 
       - name: Package github-page
         working-directory: ${{ github.workspace }}/github-pages/
