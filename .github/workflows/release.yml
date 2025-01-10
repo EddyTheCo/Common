@@ -60,7 +60,7 @@ jobs:
           rm -rf artifacts/*/_CPack_Packages
           mv artifacts/common . || true
 
-      -name: Create CHANGELOG
+      - name: Create CHANGELOG
         run: |
           git log $(git rev-list --tags --skip=1 --max-count=1 | xargs git describe --tags --abbrev=0)..$(git describe --tags --abbrev=0) --pretty=format:"* %h - %s (%an, %ar)" > CHANGELOG.md
 
