@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       qtVersion:
-        default: '6.5.0'
+        default: '6.9.0'
         type: string  
       cmakeArgs:
         default: ''
@@ -15,7 +15,7 @@ on:
         default: false
         type: boolean
       emsdkVersion:
-        default: '3.1.25'
+        default: '3.1.70'
         type: string  
 
 jobs:
@@ -47,20 +47,18 @@ jobs:
       - name: Install Qt 
         uses: jurplel/install-qt-action@v4
         with:
-          aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
           host: 'linux'
           target: 'desktop'
-          arch: 'gcc_64'
+          arch: 'linux_gcc_64'
           modules: ${{ inputs.qtModules }} 
 
       - name: Install Qt wasm
         uses: jurplel/install-qt-action@v4
         with:
-          aqtversion: '==3.1.*'
           version: ${{ inputs.qtVersion }}
-          host: 'linux'
-          target: 'desktop'
+          host: 'all_os'
+          target: 'wasm'
           arch: 'wasm_singlethread'
           modules: ${{ inputs.qtModules }} 
 
