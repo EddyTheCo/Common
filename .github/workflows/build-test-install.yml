@@ -74,6 +74,8 @@ jobs:
         if: startsWith(inputs.os, 'ubuntu')
         continue-on-error: true
         run: |
+          pip3 install pyyaml
+          python3 -c "import yaml; print('✅ PyYAML is available')"
           COMPILE_COMMANDS=$(find build -name compile_commands.json | head -n 1)
           if [ -z "$COMPILE_COMMANDS" ]; then
             echo "No compile_commands.json found under build/. Skipping clang-tidy-diff."
@@ -81,7 +83,6 @@ jobs:
           fi
           git remote add upstream "https://github.com/${{ github.event.pull_request.base.repo.full_name }}"
           git fetch --no-tags --no-recurse-submodules upstream "${{ github.event.pull_request.base.ref }}"
-          python3 -c "import yaml; print('✅ PyYAML is available')"
           git diff -U0 "$(git merge-base HEAD "upstream/${{ github.event.pull_request.base.ref }}")" | clang-tidy-diff -p1 -path "$(dirname "$COMPILE_COMMANDS")" -export-fixes ${{ runner.temp }}/common/clang-fixes.yml
 
 
