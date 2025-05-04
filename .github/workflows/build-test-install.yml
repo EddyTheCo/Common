@@ -42,7 +42,7 @@ jobs:
         if: startsWith(inputs.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build cmake doxygen pipx
+          sudo apt-get install ninja-build cmake doxygen pipx clang-tidy
           pipx install doxyqml
           
       - name: Install dependencies on macos
@@ -69,6 +69,20 @@ jobs:
           cmake -E make_directory ${{runner.temp}}/common
           cmake --workflow  --preset default-documentation
           cp -r doc/html ${{ runner.temp }}/common/
+ 
+      - name: Clang-tidy
+        if: startsWith(inputs.os, 'ubuntu')
+        continue-on-error: true
+        run: |
+          COMPILE_COMMANDS=$(find build -name compile_commands.json | head -n 1)
+          if [ -z "$COMPILE_COMMANDS" ]; then
+            echo "No compile_commands.json found under build/. Skipping clang-tidy-diff."
+            exit 0
+          fi
+          git remote add upstream "https://github.com/${{ github.event.pull_request.base.repo.full_name }}"
+          git fetch --no-tags --no-recurse-submodules upstream "${{ github.event.pull_request.base.ref }}"
+          git diff -U0 "$(git merge-base HEAD "upstream/${{ github.event.pull_request.base.ref }}")" | clang-tidy-diff -p1 -path "$(dirname "$COMPILE_COMMANDS")" -export-fixes ${{ runner.temp }}/common/clang-fixes.yml
+
 
       - name: Qmllint
         if: startsWith(inputs.os, 'ubuntu')
