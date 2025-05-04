@@ -75,9 +75,9 @@ jobs:
         continue-on-error: true
         run: |
           pip3 install pyyaml
-          COMPILE_COMMANDS=$(find build -name compile_commands.json | head -n 1)
+          COMPILE_COMMANDS=$(find -name compile_commands.json | head -n 1)
           if [ -z "$COMPILE_COMMANDS" ]; then
-            echo "No compile_commands.json found under build/. Skipping clang-tidy-diff."
+            echo "No compile_commands.json found. Skipping clang-tidy-diff."
             exit 0
           fi
           git remote add upstream "https://github.com/${{ github.event.pull_request.base.repo.full_name }}"
