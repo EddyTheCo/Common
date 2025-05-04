@@ -75,7 +75,6 @@ jobs:
         continue-on-error: true
         run: |
           pip3 install pyyaml
-          python3 -c "import yaml; print('✅ PyYAML is available')"
           COMPILE_COMMANDS=$(find build -name compile_commands.json | head -n 1)
           if [ -z "$COMPILE_COMMANDS" ]; then
             echo "No compile_commands.json found under build/. Skipping clang-tidy-diff."
