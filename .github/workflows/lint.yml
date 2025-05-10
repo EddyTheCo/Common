@@ -1,4 +1,4 @@
-name: QML Lint 
+name: Lint
 on:
   workflow_call:
 
