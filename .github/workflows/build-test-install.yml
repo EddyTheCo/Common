@@ -84,14 +84,19 @@ jobs:
           git fetch --no-tags --no-recurse-submodules upstream "${{ github.event.pull_request.base.ref }}"
           git diff -U0 "$(git merge-base HEAD "upstream/${{ github.event.pull_request.base.ref }}")" | clang-tidy-diff -p1 -path "$(dirname "$COMPILE_COMMANDS")" -export-fixes ${{ runner.temp }}/common/clang-fixes.yml
 
-
       - name: Qmllint
         if: startsWith(inputs.os, 'ubuntu')
         continue-on-error: true
         run: |
           cmake --workflow  --preset default-qmllint || true
           cp build/default-develop/*_qmllint.json ${{ runner.temp }}/common/ || true
-          echo ${{ github.event.number }} >  ${{ runner.temp }}/common/pr_number || true
+
+      - name: Export pr variables
+        if: startsWith(inputs.os, 'ubuntu')
+        run: |
+          echo "${{ github.event.number }}" >  ${{ runner.temp }}/common/pr_number
+          echo "${{ github.event.pull_request.head.repo.full_name }}" > ${{ runner.temp }}/common/pr-head-repo
+          echo "${{ github.event.pull_request.head.sha }}" > ${{ runner.temp }}/common/pr-head-sha
 
       - name: Package
         run: |
