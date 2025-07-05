@@ -13,7 +13,10 @@ on:
         type: boolean 
       C:
         default: true
-        type: boolean 
+        type: boolean
+      JS:
+        default: true
+        type: boolean
 
 jobs:
   format:
@@ -23,6 +26,14 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: prettier
+        if: startsWith(inputs.JS,'true')
+        run: |
+          sudo apt-get update
+          sudo apt-get install npm
+          npm install -g prettier
+          find . -regex '.*\.\(js\)' -exec  prettier --write {} \;
         
       - name: clang-format
         if: startsWith(inputs.C,'true')
