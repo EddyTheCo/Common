@@ -1,0 +1,54 @@
+name: post artifact
+on:
+  workflow_call:
+
+jobs:
+  download-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Download build-url artifact'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*_build-url"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}
+
+      - name: 'Download common artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: common
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}
+
+      - name: Build PR comment
+        id: build_comment
+        working-directory: ${{ runner.temp }}
+        run: |
+          echo "🧩 Build Artifacts" > comment.md
+          echo "" >> comment.md
+          echo "✅ The following artifacts were uploaded successfully:" >> comment.md
+          echo "" >> comment.md
+
+          for f in *_build-url/artifact_url.txt; do
+            osname=$(basename $(dirname "$f") _build)
+            url=$(cat "$f")
+            echo "- **${osname}**: [Download here](${url})" >> comment.md
+          done
+
+          echo "" >> comment.md
+          echo "You can download each artifact by clicking its link above." >> comment.md
+
+      - name: Read pr variables
+        id: getprv
+        working-directory: ${{ runner.temp }}
+        run: |
+          echo "prn=$(cat pr_number)" >> $GITHUB_OUTPUT
+
+      - name: Post or update PR comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ steps.getprv.outputs.prn }}
+          body-path: ${{ runner.temp }}/comment.md

@@ -102,10 +102,21 @@ jobs:
         run: |
           cpack --preset default-develop 
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        id: upload_build
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.os }}
           path: build/default-develop/packages-default-develop/*
+
+      - name: Save artifact URL to file
+        run: echo "${{ steps.upload_build.outputs.artifact-url }}" > ${{ runner.temp }}/artifact_url.txt
+
+      - name: Upload artifact url
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.os }}_build-url
+          path: ${{ runner.temp }}/artifact_url.txt
 
       - uses: actions/upload-artifact@v4
         if: startsWith(inputs.os, 'ubuntu')

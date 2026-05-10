@@ -48,4 +48,4 @@ jobs:
         uses: EddyTheCo/qmllint-action/@v0.1.0
         with:
           jsondir: ${{ runner.temp }}
-          pr_number: ${{ steps.getprn.outputs.prn }}
+          pr_number: ${{ steps.getprv.outputs.prn }}
